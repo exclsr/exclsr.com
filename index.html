@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>...</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+ 
+	$('#soon').delay(5000).animate({'margin-top': '-2em'}, 10000,
+		function() {
+			$('#text').html('soon.');
+		});
+
+});
+
+
+
+</script>
+<style><!--
+#soon {
+	font-size: 12em;
+	margin: auto;
+	margin-top: 1em;
+	text-align: center;
+}
+
+.hidden { 
+	color: white;	
+}
+
+#text {
+	position: fixed;
+	top: 200px;
+	margin: auto;
+	text-align: center;
+	width: 100%;
+}
+-->
+
+</style>
+</head>
+<body>
+
+<h1 id="soon">exc<span class="hidden">e</span>ls<span class="hidden">io</span>r</h1>
+<p id="text"></p>
+</body>
+</html>
