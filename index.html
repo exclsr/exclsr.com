@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,12 +6,41 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
- 
-	$('#soon').delay(5000).animate({'margin-top': '-2em'}, 10000,
+
+	var randomColor = function() {
+		return Math.floor(Math.random() * 256);
+	};
+		
+	var randomColorString = function() {
+			var red = randomColor();
+			var green = randomColor();
+			var blue = randomColor();
+			return 'rgb(' + red + ',' + green + ',' + blue + ')';
+	};
+
+	var randomTime = function() {
+		return Math.floor(250 + Math.random() * 1500);
+	};
+
+	var hiddenLetters = '#e, #i, #o';
+
+/* 
+	$('#soon').delay(5000).animate({'margin-top': '1em'}, 10000,
 		function() {
 			$('#text').html('soon.');
 		});
+*/
 
+	for (i=0; i < 15; i++) {	
+
+		$(hiddenLetters).each(function() {			
+			$(this).animate({'color': randomColorString()}, randomTime());
+			$(this).animate({'background-color': randomColorString()}, randomTime());
+		});					
+	}
+
+	$(hiddenLetters).animate({'color': 'white'},1000);
+	$(hiddenLetters).animate({'background-color': 'white'},1000);
 });
 
 
@@ -43,7 +71,7 @@ $(document).ready(function() {
 </head>
 <body>
 
-<h1 id="soon">exc<span class="hidden">e</span>ls<span class="hidden">io</span>r</h1>
+<h1 id="soon">exc<span class="hidden"><span id="e">e</span></span>ls<span class="hidden"><span id="i">i</span><span id="o">o</span></span>r</h1>
 <p id="text"></p>
 </body>
 </html>
