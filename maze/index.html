@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	<script type="text/javascript">
+
+	var LeftKeyCode = 37; 
+	var RightKeyCode = 39; 
+
+	var LeftDirection = '0';
+	var RightDirection = '1';	
+
+	var engineSpeed = 5; // milliseconds. less is faster.
+
+	$(document).ready(function() {
+
+		var $hero = $('#hero');
+		var $maze = $('#maze');
+
+		var runEngine = function() {				
+			setInterval(function() { update(); }, engineSpeed);
+		};		
+
+		var update = function() {			
+			switch ($hero.attr('data-dir')) {
+				case LeftDirection:
+					if (canMove($hero,-1)) {
+						$hero.css("left","-=1px");
+					}
+					break;
+				case RightDirection:
+					if (canMove($hero,1)) {
+						$hero.css("left","+=1px");
+					}					
+					break;
+				default:
+					break;
+			}
+
+			if (victoryAchieved()) {
+				$('body').css({background:"red", color: "white"});
+			}
+			else {
+				$('body').css({background:"", color: ""});
+			}
+		};
+
+		var canMove = function(el, vector) {			
+			var position = parseInt(el.css("left"), 10);
+			var mazeWidth = 
+				parseInt($maze.css("width"), 10) - 
+				parseInt(el.css("width"), 10);
+			var newPosition = position + vector;
+
+			if (newPosition < 0 || newPosition > mazeWidth) {
+				return false;
+			}
+			return true;
+		}
+
+		var victoryAchieved = function() {
+			var heroPosition = 
+				parseInt($hero.css("left")) + 
+				parseInt($hero.css("width"));
+
+			return (heroPosition >= parseInt($maze.css("width")));
+		}
+
+		var moveLeft = function() {			
+			$hero.attr('data-dir',LeftDirection);				
+		};
+
+		var moveRight = function() {			
+			$hero.attr('data-dir',RightDirection);				
+		}
+
+		$(document).keydown(function(e) {
+
+			switch (e.which) {
+				case LeftKeyCode:
+					moveLeft();
+					break;
+
+				case RightKeyCode:
+					moveRight();
+					break;
+				default: 
+					// Do nothing.
+					break;
+			}			
+		}); 
+
+		runEngine();
+	});
+	</script>
+	<style><!--
+	#hero
+	{
+		position: relative; 
+		top: 0;
+		left: 0;
+		width: 100px;
+		height: 100px; 
+		
+		background: yellow;
+	}
+
+	#maze {
+		background: black;
+		
+		width: 500px;
+		height: 100px;
+
+		margin: auto;
+		margin-top: 6em;
+		border: solid 3em blue;
+	}
+
+	#instructions {
+		margin: auto;
+		margin-top: 1em;
+		text-align: center;
+	}
+	-->
+	</style>
+</head>
+<body>
+	<div id="maze">
+		<div id="hero"></div>
+	</div>
+	<p id="instructions">Use arrow keys.</p>
+</body>
+</html>
