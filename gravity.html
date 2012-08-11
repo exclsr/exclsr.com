@@ -5,41 +5,178 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript">
+// Good Parts:
+if (typeof Object.create !== 'function') {
+	Object.create = function(o) {
+		var F = function() {};
+		F.prototype = o;
+		return new F();
+	};
+}
+
+// jQuery:
 $(document).ready(function() {
 
+var engineSpeed = 22; // lower is faster.
+var boxes = [];
 var boxCount = 0;
 
-var addBox = function(e) {
+var getGroundTop = function() {
+	return $('#ground').offset().top;
+}
+
+var getStageRight = function() {
+	return $(window).width();
+}
+
+var groundTop = getGroundTop();
+var stageRight = getStageRight();
+
+var vector = {
+	i : 0,
+	j : 0
+};
+
+var box = function() {
+	var topVal = 0;
+	var leftVal = 0;
+	var v = Object.create(vector);
+	v.i = 5;
+	v.j = 5;
+	
 	var id = "box" + boxCount;
-	boxCount++;	
+	boxCount++;
 
 	var $box = $('<div class="box"/>');
 	$box.attr('id', id);
-
-	// It's important to append $box to 'body' before draggable is called. 
-	// I'm not sure why, exactly. A question for the experts.
-	$("body").append($box);
-
-	var boxWidth = parseInt($('#' + id).css("width"), 10);	
-	var boxTop = e.pageY - boxWidth / 2;
-	var boxLeft = e.pageX - boxWidth / 2;
-
-	$box.css("top", boxTop); 
-	$box.css("left", boxLeft);
-	$box.draggable();
+	
+	return {
+		el : function() {
+			return $box;
+		},
+		top : function(val) { 
+			if (val === undefined)
+				return topVal;
+			topVal = val; 
+			this.paint();
+		},
+		left : function(val) { 
+			if (val === undefined)
+				return leftVal;
+			leftVal = val; 
+			this.paint();
+		},
+		paint : function() {
+			var sign = this.vector().j < 0 ? " - " : " + ";
+			$box.html(this.vector().i + sign + Math.abs(this.vector().j));
+			$box.css("top", this.top());
+			$box.css("left", this.left());			
+		},
+		vector : function() {
+			return v;
+		}
+	};
 };
 
+var addBox = function(x, y) {
 
-$(document).click(addBox);
-	
+	var b = box(); 
+	$("body").append(b.el());
+
+	var boxWidth = b.el().width();
+	var boxTop = y - boxWidth / 2;
+	var boxLeft = x - boxWidth / 2;
+
+	b.left(boxLeft); 
+	b.top(boxTop); 
+
+	boxes.push(b);
+};
+
+var runEngine = function() {				
+	setInterval(function() { update(); }, engineSpeed);
+};		
+
+var update = function() {	
+	moveBoxes();
+	cleanup();	
+}
+
+var moveBoxes = function() {
+	for (var i=0; i < boxes.length; i++) {
+	 	var b = boxes[i];
+
+		// Move box based on its vector
+	 	b.left(b.left() + b.vector().i);
+	 	b.top(b.top() - b.vector().j);
+
+		// Detect the #ground
+	 	if (b.top() + b.el().height() + parseInt(b.el().css("padding-top")) > groundTop) {
+	 		// Put the box on the ground
+	 		b.top(groundTop - b.el().height() - parseInt(b.el().css("padding-top")));
+	 	}
+	 	else {
+	 		// Increase downward velocity if haven't hit the ground
+	 		b.vector().j--;	
+	 	}
+	 	
+	 	b.paint();		
+	}
+}
+
+var cleanup = function() {
+	var markedForRemoval = [];
+	// Clean up a little.	
+	for (var i=0; i < boxes.length; i++) {
+		var b = boxes[i];
+		var index = i;
+
+		// Are we off the screen?
+		if (b.left() > stageRight) {			
+			markedForRemoval.push(index);
+		}
+	}
+
+	for (var i=0; i < markedForRemoval.length; i++) {
+		var index = markedForRemoval[i];
+		boxes[index].el().remove();
+		boxes.splice(index,1);
+	}
+}
+
+var isFirstClick = true;
+
+// Main:
+$(window).resize(function () {
+	groundTop = getGroundTop();
+	stageRight = getStageRight();
+});
+
+$(document).click(function(e) {
+	if (isFirstClick) {
+		$('#instructions').remove();
+		isFirstClick = false;
+	}
+
+	addBox(e.pageX, e.pageY);
+});
+
+runEngine();
+
 });
 </script>
 <style><!--
 .box {
 	position: fixed;
-	background: purple;
-	height: 100px;
+	height: 60px;
 	width: 100px;
+
+	background: purple;
+	color: yellow;
+
+	text-align: center;
+	margin: auto;
+	padding-top: 40px;
 }
 
 #ground {
@@ -50,11 +187,20 @@ $(document).click(addBox);
 	left: 0;
 	top: 90%;
 }
--->
 
+#instructions {
+	margin: auto;
+	margin-top: 10%;
+	text-align: center;
+
+	color: #FDD;
+	font-size: 3em;
+}
+-->
 </style>
 </head>
 <body>
-<div id="ground"></div>
+	<div id="instructions">please click.</div>
+	<div id="ground"></div>
 </body>
 </html>
