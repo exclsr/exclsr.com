@@ -18,6 +18,7 @@ if (typeof Object.create !== 'function') {
 $(document).ready(function() {
 
 var engineSpeed = 22; // lower is faster.
+var groundSpeed = 50; // speed when they hit the ground.
 var boxes = [];
 var boxCount = 0;
 
@@ -114,6 +115,7 @@ var moveBoxes = function() {
 	 	if (b.top() + b.el().height() + parseInt(b.el().css("padding-top")) > groundTop) {
 	 		// Put the box on the ground
 	 		b.top(groundTop - b.el().height() - parseInt(b.el().css("padding-top")));
+	 		b.vector().i = groundSpeed;	 		
 	 	}
 	 	else {
 	 		// Increase downward velocity if haven't hit the ground
