@@ -134,12 +134,14 @@ var cleanup = function() {
 		// Are we off the screen?
 		if (b.left() > stageRight) {			
 			markedForRemoval.push(index);
+			// Remove from the DOM now.
+			// Remove from the array later.
+			boxes[index].el().remove();
 		}
 	}
 
 	for (var i=0; i < markedForRemoval.length; i++) {
-		var index = markedForRemoval[i];
-		boxes[index].el().remove();
+		var index = markedForRemoval[i];		
 		boxes.splice(index,1);
 	}
 }
