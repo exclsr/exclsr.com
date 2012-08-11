@@ -148,21 +148,31 @@ var cleanup = function() {
 	}
 }
 
-var isFirstClick = true;
-
 // Main:
 $(window).resize(function () {
 	groundTop = getGroundTop();
 	stageRight = getStageRight();
 });
 
-$(document).click(function(e) {
+var isFirstClick = true;
+
+$(document).bind("click", function(e) {
 	if (isFirstClick) {
 		$('#instructions').remove();
 		isFirstClick = false;
 	}
 
 	addBox(e.pageX, e.pageY);
+});
+
+$(document).bind("touchstart", function(e) {
+	if (isFirstClick) {
+		$('#instructions').remove();
+		isFirstClick = false;
+	}
+
+	var touch = e.originalEvent.touches[0]
+	addBox(touch.pageX, touch.pageY);
 });
 
 runEngine();
