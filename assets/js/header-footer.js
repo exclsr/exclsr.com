@@ -14,7 +14,7 @@ $(document).ready(function() {
 	};
 
 	var onHeaderReady = function() {
-		var $navLinks = $("#header a");	
+		var $navLinks = $(".navbar a");	
 		var path = window.location.pathname;		
 	
 		$navLinks.each(function() {
