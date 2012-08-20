@@ -1,6 +1,18 @@
 $(document).ready(function() {
-	var $body = $("body");
-	
+
+	var includeHeaderAndFooter = function() {
+		var $body = $("body");
+
+		$.get("/assets/inc/header/", function(data) {
+			$body.prepend(data);
+			onHeaderReady();
+		});
+
+		$.get("/assets/inc/footer/", function(data) {
+			$body.append(data);		
+		});
+	};
+
 	var onHeaderReady = function() {
 		var $navLinks = $("#header a");	
 		var path = window.location.pathname;		
@@ -13,12 +25,5 @@ $(document).ready(function() {
 		});
 	};
 
-	$.get("/assets/inc/header/", function(data) {
-		$body.prepend(data);
-		onHeaderReady();
-	});
-
-	$.get("/assets/inc/footer/", function(data) {
-		$body.append(data);		
-	});
+	includeHeaderAndFooter();
 });
