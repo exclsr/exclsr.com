@@ -35,9 +35,9 @@ var totalSeconds = 60 * 60 * daysShown;
 var secondsWidthInPixels = legendWidth / totalSeconds;
 var dayInSeconds = 24 * 60 * 60;
 
-// Total width of 2 days
+// Total width of 3 days
 var $hours = $('#hours');
-var dayCount = 2;
+var dayCount = 3;
 $hours.width(dayCount * dayInSeconds * secondsWidthInPixels); 
 
 // Add an 'hour div' for each hour in our timeline
@@ -64,10 +64,14 @@ var update = function() {
 
 	var secondsPerHour = 60 * 60;
 	var secondsPerMinute = 60;
+	var secondsPerDay = 24 * secondsPerHour;
 
 	var secondsToday = now.getHours() * secondsPerHour 
 		+ now.getMinutes() * secondsPerMinute
 		+ now.getSeconds();
+	// Add a day to our offset, so the timeline always shows the last day.
+	// TODO: Think of a better way to do this.
+	secondsToday += secondsPerDay;
 
 	var offset = -secondsWidthInPixels * secondsToday + arrowOffset.left;
 	$('#hours').css('margin-left', Math.floor(offset));
