@@ -24,7 +24,7 @@ var legendCenterX = $('#legend').width()/2;
 
 var $arrow = $('#arrow')
 $arrow.css('left', legendCenterX - $arrow.width()/2);
-var arrowOffset = $arrow.offset();
+var centerX = ($arrow.offset().left + $arrow.width()/2);
 
 
 // Timeline.
@@ -39,6 +39,7 @@ var dayInSeconds = 24 * 60 * 60;
 var $hours = $('#hours');
 var dayCount = 3;
 $hours.width(dayCount * dayInSeconds * secondsWidthInPixels); 
+$('#markers').width(dayCount * dayInSeconds * secondsWidthInPixels);
 
 // Add an 'hour div' for each hour in our timeline
 var borderThickness = 2;
@@ -58,27 +59,50 @@ $('.hourLabel').each(function() {
 	$(this).css('left', -$(this).width()/2 - 1);
 });
 
-var update = function() {	
-	var now = new Date();
-	$clock.html(now.toLocaleTimeString());
+var getTimelinePosition = function(date) {
 
 	var secondsPerHour = 60 * 60;
 	var secondsPerMinute = 60;
 	var secondsPerDay = 24 * secondsPerHour;
 
-	var secondsToday = now.getHours() * secondsPerHour 
-		+ now.getMinutes() * secondsPerMinute
-		+ now.getSeconds();
+	var secondsToday = date.getHours() * secondsPerHour 
+		+ date.getMinutes() * secondsPerMinute
+		+ date.getSeconds();
 	// Add a day to our offset, so the timeline always shows the last day.
 	// TODO: Think of a better way to do this.
 	secondsToday += secondsPerDay;
 
-	var offset = -secondsWidthInPixels * secondsToday + arrowOffset.left;
-	$('#hours').css('margin-left', Math.floor(offset));
-}
+	var offset = -(secondsToday * secondsWidthInPixels);
+	return Math.floor(offset);
+};
+
+var nowMarkerPosition = undefined;
+
+var update = function() {	
+	var now = new Date();
+	$clock.html(now.toLocaleTimeString());
+
+	nowMarkerPosition = getTimelinePosition(now);
+	$('#hours').css('margin-left', Math.floor(nowMarkerPosition + centerX));
+	$('#markers').css('margin-left', Math.floor(nowMarkerPosition + centerX));
+};
 
 // Main:
 runEngine();
 update(); 
+
+// Add a marker at the current time.
+var now = new Date();
+var mark = new Date(now.getYear(), now.getMonth(), now.getDay(), 10,0,0,0);
+
+var offset = getTimelinePosition(now);
+var timelineNow = -offset;
+
+$marker = $('<div class="marker"></div>');
+$marker.css('margin-left', timelineNow);
+$marker.hide();
+$('#markers').append($marker);
+$marker.css('margin-left', '-=' + $marker.width()/2);
+$marker.show();
 
 });

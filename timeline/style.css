@@ -17,8 +17,19 @@
 
 #hours {
 	overflow: hidden;
-	border: solid 1px blue;
+	border: 0;
+	border-top: solid 1px blue;
+	border-bottom: solid 1px blue;
 	background: white;
+}
+#markers {
+	/*border: solid 1px green;*/
+	background-color: transparent;
+	height: 30px;
+	bottom: 1em;
+	z-index: 5;
+
+	position: absolute;
 }
 
 /* Static, mostly boring things */
@@ -39,8 +50,21 @@
 	position: absolute;
 	top: 1em;
 	margin-top: 0;
+	width: 20px;	
 }
 
 body {
 	overflow: hidden;
+	margin: 0;
+}
+
+.marker {		
+	background: orange;
+	width: 20px;
+	height: 20px;
+	z-index: 15;
+	margin-top: 1.5ex;
+}
+.border {
+	/*border: solid red 1px;*/
 }
