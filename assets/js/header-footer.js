@@ -20,7 +20,8 @@ $(document).ready(function() {
 		$navLinks.each(function() {
 			var el = $(this);			
 			if (el.attr('href') === path) {
-				el.parent("li").addClass("active");
+				// el.parent("li").addClass("active");
+				el.addClass("active");
 			}
 		});
 	};
