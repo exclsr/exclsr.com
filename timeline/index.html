@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+<title>...</title>
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/bootstrap-grid.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script src="/assets/js/header-footer.js"></script>
+<script type="text/javascript">
+// Good Parts:
+if (typeof Object.create !== 'function') {
+	Object.create = function(o) {
+		var F = function() {};
+		F.prototype = o;
+		return new F();
+	};
+}
+
+// jQuery:
+$(document).ready(function() {
+
+// Typical engine loop
+var engineSpeed = 1000; // lower is faster.
+var runEngine = function() {		
+	setInterval(function() { update(); }, engineSpeed);
+};		
+
+// The static, boring things.
+var $clock = $('#clock');
+
+var legendWidth = $('#legend').width();
+var legendCenterX = $('#legend').width()/2;
+
+var $arrow = $('#arrow')
+$arrow.css('left', legendCenterX - $arrow.width()/2);
+var arrowOffset = $arrow.offset();
+
+
+// Timeline.
+// Let's show six hours.
+var daysShown = 6;
+var totalSeconds = 60 * 60 * daysShown;
+// A second is 'this many' pixels wide
+var secondsWidthInPixels = legendWidth / totalSeconds;
+var dayInSeconds = 24 * 60 * 60;
+
+// Total width of 2 days
+var $hours = $('#hours');
+var dayCount = 2;
+$hours.width(dayCount * dayInSeconds * secondsWidthInPixels); 
+
+// Add an 'hour div' for each hour in our timeline
+var borderThickness = 2;
+var hourDiv = undefined; 
+for (var i=0; i < dayCount * 24; i++) {
+	hourDiv = $('<div/>');
+	hourDiv.addClass('hour');
+	hourDiv.width((legendWidth / daysShown) - borderThickness);
+	hourDiv.html('<div class="hourLabel">' + i%24 + '</div>');
+
+	$('#hours').append(hourDiv);
+}
+
+// Center the label text in between each 'hour div'
+$('.hourLabel').each(function() {
+	// The '1' is a magic number.
+	$(this).css('left', -$(this).width()/2 - 1);
+});
+
+var update = function() {	
+	var now = new Date();
+	$clock.html(now.toLocaleTimeString());
+
+	var secondsPerHour = 60 * 60;
+	var secondsPerMinute = 60;
+
+	var secondsToday = now.getHours() * secondsPerHour 
+		+ now.getMinutes() * secondsPerMinute
+		+ now.getSeconds();
+
+	var offset = -secondsWidthInPixels * secondsToday + arrowOffset.left;
+	$('#hours').css('margin-left', Math.floor(offset));
+}
+
+// Main:
+runEngine();
+update(); 
+
+});
+</script>
+
+<style>
+.hour {
+	position: relative;
+	display: inline-block;	
+	height: 30px;
+	border: 0;
+	border-left: solid black 1px;
+	border-right: solid black 1px;
+	background: inherit;
+}
+.hourLabel { 
+	background-color: inherit;
+	position: absolute;
+	bottom: -1ex; 
+	left: -1.5ex; /* Overridden by jQuery */
+	margin: 0; padding: 0;
+}
+
+#hours {
+	overflow: hidden;
+	border: solid 1px blue;
+	background: white;
+}
+
+/* Static, mostly boring things */
+#clock { 
+	text-align: center;
+	padding-top: 6em;
+}
+#legend {
+	text-align: center;	
+	position: relative;
+	margin: 0;
+}
+#label {
+	margin-top: 0;
+	margin-bottom: 1em;
+}
+#arrow {	
+	position: absolute;
+	top: 1em;
+	margin-top: 0;
+}
+
+</style>
+
+</head>
+<body>
+	<h1 id="clock"></h1>
+	<div id="legend">
+		<h2 id="label">You are here</h2>
+		<h2 id="arrow">&darr;</h2>
+		<div id="hours"></div>
+	</div>
+</body>
+</html>
