@@ -1,0 +1,65 @@
+#clock {
+	margin-top: 1ex;
+	padding-top: 0;
+	display: none;
+}
+
+h2 {
+	font-family: 'Stoke';
+}
+
+#legend {
+	margin-top: 10em;
+}
+
+#hours {
+	border: none;
+	border-top: #449 solid 10px;
+}
+
+.hour {
+	border: none;	
+	border-left: dotted #888 2px;
+}
+
+.hourLabel {
+	font-family: sans-serif;
+	font-size: 10pt;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.painKiller, .antibiotics {
+	position: absolute;
+
+	width: 15px;
+	height: 15px;	
+	margin-top: 2px;
+	
+	border: solid red 1px;
+	background-image: -webkit-radial-gradient(right top, circle farthest-corner, #FFFFFF 0%, #EF0800 100%);
+
+	z-index: -10;
+}
+
+.antibiotics {
+	margin-top: 19px;
+
+	border: solid orange 1px;
+	background-image: -webkit-radial-gradient(right top, circle farthest-side, #FFFFFF 0%, #EB7907 100%);
+}
+
+#entry {
+	position: absolute;
+	top: 3em;
+	right: 3em;
+	display: none; /* The world is not ready. */
+}
+
+#entry label {	
+	width: 70px;
+	display: inline-block;
+}
+#entry button {
+	float: right;
+}

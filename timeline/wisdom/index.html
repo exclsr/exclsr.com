@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+<title>...</title>
+<link href='http://fonts.googleapis.com/css?family=Stoke' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/timeline/style.css">
+<link rel="stylesheet" href="/timeline/wisdom/style.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script src="/assets/js/header-footer.js"></script>
+<script src="/timeline/script.js"></script>
+<script src="/timeline/wisdom/script.js"></script>
+</head>
+<body>
+	<div id="entry">
+		<div><label>Start time:</label><input type="text" id="startField"/></div>
+		<div><label>Bed time:</label><input type="text" id="endField"/></div>
+		<button id="enterButton">Enter</button>
+	</div>	
+	<div id="legend" class="border">
+		<h2 id="label">You are here</h2>
+		<h2 id="arrow">&darr;</h2>
+		<div id="markers"></div>
+		<div id="hours"></div>
+	</div>
+	<h1 id="clock"></h1>
+</body>
+</html>
