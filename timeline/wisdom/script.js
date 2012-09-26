@@ -1,34 +1,6 @@
 
 $(document).ready(function() {
 
-var timeline = new Timeline($("#legend"));
-
-$('#enterButton').click(function() {
-
-});
-
-var addMarker = function(startDate, hourCount, markerClass) {
-	var offset = timeline.getPositionFor(startDate);
-	var timelineNow = -offset;
-
-	var $marker = $('<div/>');
-	$marker.addClass(markerClass || "painKiller");
-	$marker.css('margin-left', timelineNow);
-	$marker.hide();
-	timeline.getMarkersElement().append($marker);
-
-	if (hourCount) {
-		var stopOffset = timeline.getPositionFor(startDate.addHours(hourCount));
-		var timelineStop = -stopOffset;
-		var barWidth = timelineStop - timelineNow;
-		console.log(barWidth);
-		$marker.width(barWidth);
-	}
-
-	$marker.show();
-};
-
-
 // http://stackoverflow.com/questions/1050720/adding-hours-to-javascript-date-object
 Date.prototype.addHours= function(h){
     var copiedDate = new Date(this.getTime());
@@ -64,14 +36,14 @@ var anti1 = new Date(startTime + antibioticsInterval);
 var anti2 = new Date(startTime + antibioticsInterval * 2);
 var anti3 = new Date(startTime + antibioticsInterval * 3);
 
-addMarker(dayStart);
-addMarker(pain1, 1);
-addMarker(pain2, 1);
-addMarker(pain3, 1);
-addMarker(pain4, 1);
+timeline.addMarker(dayStart, undefined, "painKiller");
+timeline.addMarker(pain1, 1, "painKiller");
+timeline.addMarker(pain2, 1, "painKiller");
+timeline.addMarker(pain3, 1, "painKiller");
+timeline.addMarker(pain4, 1, "painKiller");
 
-addMarker(dayStart, 0.225, "antibiotics");
-addMarker(anti1, 0.5, "antibiotics");
-addMarker(anti2, 0.5, "antibiotics");
-addMarker(anti3, 0.5, "antibiotics");
+timeline.addMarker(dayStart, undefined, "antibiotics");
+timeline.addMarker(anti1, 0.5, "antibiotics");
+timeline.addMarker(anti2, 0.5, "antibiotics");
+timeline.addMarker(anti3, 0.5, "antibiotics");
 });
