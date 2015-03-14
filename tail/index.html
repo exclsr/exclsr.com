@@ -46,6 +46,7 @@ $(function() {
         j: 40
     };
     var TailLength = 500;
+    var BallRadius = 15;
 
     var Gravity = 9.81; 
     // Weaker gravity is cooler gravity
@@ -53,9 +54,8 @@ $(function() {
     Gravity = Gravity * 0.125;
 
     var drawBall = function (x, y) {
-        var radius = 10;
         c.beginPath();
-        c.arc(x, y, radius, 0, Math.PI*2, true);
+        c.arc(x, y, BallRadius, 0, Math.PI*2, true);
         c.closePath();
         c.fill();  
     };
@@ -78,6 +78,10 @@ $(function() {
         return Math.sqrt(Math.pow(end.x-start.x,2) + Math.pow(end.y-start.y,2));
     };
 
+    var getRandomHexColor = function () {
+        return '#' + Math.floor(Math.random() * 16777215).toString(16);
+    };
+
     // Recusively draws a projectile tail by drawing line 
     // segments "back in time" until the tail has reached
     // the desired target length
@@ -98,7 +102,8 @@ $(function() {
             c.beginPath();
             c.moveTo(start.x, start.y);
             c.lineTo(end.x, end.y);
-            c.strokeStyle = "blue";
+            c.lineWidth = BallRadius * 2;
+            c.strokeStyle = getRandomHexColor();
             c.stroke();
 
             drawTail(end, endTime, length);
