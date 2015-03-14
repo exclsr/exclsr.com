@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>...</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            body, html {
+                width: 100%;
+                height: 100%;
+            },
+            canvas {
+                display: block;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script>
+$(function() {
+    // Make the drawing canvas the size of the window
+    var canvas = document.getElementById('canvas');
+    
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var c = canvas.getContext("2d");
+
+    var InitialPosition = {
+        x: 60, 
+        y: 700
+    };
+    var InitialVelocity = {
+        i: 12,
+        j: 40
+    };
+    var TailLength = 500;
+
+    var Gravity = 9.81; 
+    // Weaker gravity is cooler gravity
+    // (this is one way to have the arc fill the screen)
+    Gravity = Gravity * 0.125;
+
+    var drawBall = function (x, y) {
+        var radius = 10;
+        c.beginPath();
+        c.arc(x, y, radius, 0, Math.PI*2, true);
+        c.closePath();
+        c.fill();  
+    };
+
+    var clearScreen = function () {
+        c.clearRect(0, 0, canvas.width, canvas.height); 
+    };
+
+    var getPosition = function (elapsedTime) {
+        var verticalDisplacement = 
+            InitialVelocity.j * elapsedTime - (0.5 * Gravity * Math.pow(elapsedTime, 2));
+
+        return {
+            x: InitialPosition.x + InitialVelocity.i * elapsedTime,
+            y: InitialPosition.y - verticalDisplacement
+        };
+    };
+
+    var getDistanceBetween = function (start, end) {
+        return Math.sqrt(Math.pow(end.x-start.x,2) + Math.pow(end.y-start.y,2));
+    };
+
+    // Recusively draws a projectile tail by drawing line 
+    // segments "back in time" until the tail has reached
+    // the desired target length
+    var drawTail = function (start, elapsedTime, length) {
+        var deltaTime = 0.1; // determines accuracy
+
+        if (elapsedTime < deltaTime) {
+            return;
+        }
+
+        var endTime = elapsedTime - deltaTime;
+        var end = getPosition(endTime);
+
+        var length = length || 0;
+        length += getDistanceBetween(start, end);
+        
+        if(length < TailLength) {
+            c.beginPath();
+            c.moveTo(start.x, start.y);
+            c.lineTo(end.x, end.y);
+            c.strokeStyle = "blue";
+            c.stroke();
+
+            drawTail(end, endTime, length);
+        }
+    };
+
+    var update = function(elapsedTime) {
+        // Slow down time
+        var elapsedTime = elapsedTime * 0.025;
+
+        var position = getPosition(elapsedTime);
+
+        clearScreen();
+        drawTail(position, elapsedTime);
+        drawBall(position.x, position.y);
+    };
+
+    var runEngine = function() {
+        var engineSpeed = 1000 / 60;
+        var startTime = Date.now();
+        setInterval(function () {
+            var elapsedTime = Date.now() - startTime;
+            update(elapsedTime);
+        }, engineSpeed);
+    };
+
+    runEngine();
+});
+        </script>
+    </head>
+
+    <body>
+        <canvas id="canvas"/>
+    </body>
+</html>
